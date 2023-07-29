@@ -139,9 +139,9 @@
   <script>
     /* JavaScript para o jogo */
     const questions = [
-      { question: "Qual a melhor loja de Esperantina?", answer: "imports" },
-      { question: "Quantos anos a Imports completa este ano?", answer: "9" },
-      { question: "Qual a principal marca de smartphone que a Imports trabalha?", answer: "xiaomi" }
+      { question: "Qual a melhor loja de Esperantina?", answers: ["imports", "Imports"] },
+      { question: "Quantos anos a Imports completa este ano?", answers: ["9", "09"] },
+      { question: "Qual a principal marca de smartphone que a Imports trabalha?", answers: ["xiaomi", "Xiaomi"] }
     ];
 
     let currentQuestion = 0;
@@ -189,7 +189,7 @@
           showMessage(`Parabéns, ${playerName}! Você acertou todas as perguntas!`);
         }, 3000);
       } else {
-        showMessage("Verifique suas respostas!");
+        showMessage("Resposta errada!");
       }
     }
 
