@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Story Premiado imports!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #game-container {
+      text-align: center;
+    }
+
+    h1 {
+      margin: 30px 0;
+    }
+
+    button {
+      font-size: 24px;
+      padding: 20px 40px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #c70000;
+    }
+
+    #input-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #input-container div {
+      margin: 10px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #ccc;
+      transition: border-color 0.3s ease;
+      background-color: #222;
+      color: white;
+    }
+
+    input.correct {
+      border-color: green;
+    }
+
+    input.incorrect {
+      border-color: red;
+    }
+
+    #confirmButton {
+      font-size: 18px;
+      padding: 15px 30px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 20px;
+      display: none;
+      animation: blink 0.5s infinite alternate;
+    }
+
+    #fireworks-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .firework {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      animation: explode 3s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        transform: scale(30);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Story Premiado imports!</h1>
+    <button id="startButton" onclick="getAndShowName()">Iniciar Jogo</button>
+    <div id="input-container" style="display: none;">
+      <div>
+        <p id="question1"></p>
+        <input type="text" id="userInput1" placeholder="Digite aqui">
+      </div>
+      <div>
+        <p id="question2"></p>
+        <input type="text" id="userInput2" placeholder="Digite aqui">
+      </div>
+      <div>
+        <p id="question3"></p>
+        <input type="text" id="userInput3" placeholder="Digite aqui">
+      </div>
+      <button id="confirmButton" onclick="confirmAnswers()">Confirmar Respostas</button>
+      <p id="message"></p>
+    </div>
+    <div id="fireworks-container"></div>
+  </div>
+
+  <script>
+    /* JavaScript para o jogo */
+    const questions = [
+      { question: "Qual a melhor loja de Esperantina?", answer: "imports" },
+      { question: "Quantos anos a Imports completa este ano?", answer: "9" },
+      { question: "Qual a principal marca de smartphone que a Imports trabalha?", answer: "xiaomi" }
+    ];
+
+    let currentQuestion = 0;
+    let inputString1 = "";
+    let inputString2 = "";
+    let inputString3 = "";
+    let isGameStarted = false;
+    let playerName = "";
+
+    function getAndShowName() {
+      playerName = prompt("Olá! Antes de começar, por favor, informe seu nome:");
+      if (playerName) {
+        document.getElementById("startButton").style.display = "none";
+        document.getElementById("confirmButton").style.display = "block";
+        document.getElementById("input-container").style.display = "block";
+        document.getElementById("userInput1").focus();
+        displayQuestions();
+        isGameStarted = true;
+      }
+    }
+
+    function displayQuestions() {
+      document.getElementById("question1").textContent = `Pergunta 1: ${questions[0].question}`;
+      document.getElementById("question2").textContent = `Pergunta 2: ${questions[1].question}`;
+      document.getElementById("question3").textContent = `Pergunta 3: ${questions[2].question}`;
+    }
+
+    function checkAnswer() {
+      const userInput1 = document.getElementById("userInput1");
+      const userInput2 = document.getElementById("userInput2");
+      const userInput3 = document.getElementById("userInput3");
+
+      if (inputString1.toLowerCase() === questions[0].answer &&
+          inputString2 === questions[1].answer &&
+          inputString3.toLowerCase() === questions[2].answer) {
+        userInput1.disabled = true;
+        userInput2.disabled = true;
+        userInput3.disabled = true;
+        userInput1.classList.add("correct");
+        userInput2.classList.add("correct");
+        userInput3.classList.add("correct");
+        showFireworks();
+        setTimeout(function () {
+          document.getElementById("fireworks-container").innerHTML = "";
+          showMessage(`Parabéns, ${playerName}! Você acertou todas as perguntas!`);
+        }, 3000);
+      } else {
+        showMessage("Verifique suas respostas!");
+      }
+    }
+
+    function showMessage(message) {
+      const messageElement = document.getElementById("message");
+      messageElement.textContent = message;
+      messageElement.style.display = "block";
+      messageElement.style.fontSize = "40px";
+      messageElement.style.animation = "blink 0.5s infinite alternate";
+    }
+
+    function showFireworks() {
+      const container = document.getElementById("fireworks-container");
+      const fireworksCount = 30;
+
+      for (let i = 0; i < fireworksCount; i++) {
+        const firework = document.createElement("div");
+        firework.className = "firework";
+        firework.style.left = `${Math.random() * 100}%`;
+        firework.style.top = `${Math.random() * 100}%`;
+        container.appendChild(firework);
+      }
+    }
+
+    document.getElementById("userInput1").addEventListener("input", function(event) {
+      inputString1 = event.target.value;
+      event.target.classList.remove("correct", "incorrect");
+    });
+
+    document.getElementById("userInput2").addEventListener("input", function(event) {
+      inputString2 = event.target.value;
+      event.target.classList.remove("correct", "incorrect");
+    });
+
+    document.getElementById("userInput3").addEventListener("input", function(event) {
+      inputString3 = event.target.value;
+      event.target.classList.remove("correct", "incorrect");
+    });
+
+    function confirmAnswers() {
+      if (isGameStarted) {
+        checkAnswer();
+      }
+    }
+  </script>
+</body>
+</html>
