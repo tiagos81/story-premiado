@@ -3,13 +3,140 @@
 <head>
   <title>Story Premiado imports!</title>
   <style>
-    /* Estilos (mantidos os mesmos) */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Centralizar conteúdo do jogo */
+    #game-container {
+      text-align: center;
+    }
+
+    h1 {
+      margin: 30px 0; /* Espaçamento adicionado */
+    }
+
+    /* Botão Iniciar Jogo e Botão Confirmar Resposta */
+    .gameButton {
+      font-size: 24px;
+      padding: 20px 40px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      animation: blink 1s infinite alternate;
+      margin-top: 20px;
+    }
+
+    .gameButton:hover {
+      background-color: #c70000;
+    }
+
+    #input-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #input-container div {
+      margin: 10px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #ccc;
+      transition: border-color 0.3s ease;
+      background-color: #222;
+      color: white;
+    }
+
+    input.correct {
+      border-color: green;
+    }
+
+    input.incorrect {
+      border-color: red;
+    }
+
+    #confirmButton {
+      font-size: 24px;
+      padding: 20px 40px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      display: none;
+      animation: blink 1s infinite alternate;
+      margin-top: 20px;
+    }
+
+    #confirmButtonContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 20px;
+      display: none;
+      animation: blink 0.5s infinite alternate;
+    }
+
+    #fireworks-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .firework {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      animation: explode 3s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        transform: scale(30);
+        opacity: 0;
+      }
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="game-container">
     <h1>Story Premiado imports!</h1>
-    <button id="startButton" onclick="getAndShowName()">Iniciar Jogo</button>
+    <button id="startButton" class="gameButton" onclick="getAndShowName()">Iniciar Jogo</button>
     <div id="input-container" style="display: none;">
       <div>
         <p id="question1"></p>
@@ -23,26 +150,20 @@
         <p id="question3"></p>
         <input type="text" id="userInput3" placeholder="Digite aqui">
       </div>
-      <button id="confirmButton" onclick="confirmAnswers()">Confirmar Respostas</button>
+      <div id="confirmButtonContainer">
+        <button id="confirmButton" class="gameButton" onclick="confirmAnswers()">Confirmar Respostas</button>
+      </div>
       <p id="message"></p>
     </div>
     <div id="fireworks-container"></div>
   </div>
 
   <script>
-    /* JavaScript para o jogo */
-    const questions = [
-      { question: "Qual o primeiro nome do proprietário da imports?", answers: ["Tiago", "tiago"] },
-      { question: "Quantos vendedores internos temos aqui na imports?", answers: ["3", "3 vendedores"] },
-      { question: "qual a loja que mais distribui presentes para seus clientes?", answers: ["imports", "Imports"] }
-    ];
-
-    let currentQuestion = 0;
+    let isGameStarted = false;
+    let playerName = "";
     let inputString1 = "";
     let inputString2 = "";
     let inputString3 = "";
-    let isGameStarted = false;
-    let playerName = "";
 
     function getAndShowName() {
       playerName = prompt("Olá! Antes de começar, por favor, informe seu nome:");
@@ -57,9 +178,9 @@
     }
 
     function displayQuestions() {
-      document.getElementById("question1").textContent = `Pergunta 1: ${questions[0].question}`;
-      document.getElementById("question2").textContent = `Pergunta 2: ${questions[1].question}`;
-      document.getElementById("question3").textContent = `Pergunta 3: ${questions[2].question}`;
+      document.getElementById("question1").textContent = `Qual o primeiro nome do proprietário da imports?`;
+      document.getElementById("question2").textContent = `Quantos vendedores internos temos aqui na imports?`;
+      document.getElementById("question3").textContent = `Qual a loja que mais distribui presentes para seus clientes?`;
     }
 
     function checkAnswer() {
@@ -67,19 +188,12 @@
       const userInput2 = document.getElementById("userInput2");
       const userInput3 = document.getElementById("userInput3");
 
-      const answer1 = inputString1.toLowerCase();
-      const answer2 = inputString2.toLowerCase();
-      const answer3 = inputString3.toLowerCase();
-
-      const correctAnswers1 = questions[0].answers.map((answer) => answer.toLowerCase());
-      const correctAnswers2 = questions[1].answers.map((answer) => answer.toLowerCase());
-      const correctAnswers3 = questions[2].answers.map((answer) => answer.toLowerCase());
-
       if (
-        correctAnswers1.includes(answer1) &&
-        correctAnswers2.includes(answer2) &&
-        correctAnswers3.includes(answer3)
+        (inputString1.toLowerCase() === "tiago" || inputString1 === "Tiago") &&
+        (inputString2 === "3" || inputString2.toLowerCase() === "3 vendedores") &&
+        (inputString3.toLowerCase() === "imports")
       ) {
+        showMessage(`Parabéns, ${playerName}! Você acertou!`);
         userInput1.disabled = true;
         userInput2.disabled = true;
         userInput3.disabled = true;
@@ -89,7 +203,6 @@
         showFireworks();
         setTimeout(function () {
           document.getElementById("fireworks-container").innerHTML = "";
-          showMessage(`Parabéns, ${playerName}! Você acertou!`);
         }, 3000);
       } else {
         showMessage("Verifique suas respostas!");
@@ -100,7 +213,7 @@
       const messageElement = document.getElementById("message");
       messageElement.textContent = message;
       messageElement.style.display = "block";
-      messageElement.style.fontSize = "40px";
+      messageElement.style.fontSize = "20px";
       messageElement.style.animation = "blink 0.5s infinite alternate";
     }
 
